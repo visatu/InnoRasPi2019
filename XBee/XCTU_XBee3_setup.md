@@ -7,10 +7,11 @@ The following should be done to each device. Saving the device profile will spee
 2. Search for "AP" and set it to [1] (API mode without escapes)
 3. "ID" to whatever ID you want to use
 4. Scan channels "SC" to "FFF"
-5. "CE" Device role: One of your devices should Form network, others should Join network.
-6. Optionally, "NI" value will give your device a name.
-7. Write settings to module (Write)
-8. To test if the devices see each other, run "Discover radio nodes in same network" (middle button in a device's card under Radio Modules).
+5. "BD" to "7" a higher baud rate makes things a bit faster.
+6. "CE" Device role: One of your devices should Form network, others should Join network.
+7. Optionally, "NI" value will give your device a name.
+8. Write settings to module (Write)
+9. To test if the devices see each other, run "Discover radio nodes in same network" (middle button in a device's card under Radio Modules).
 
 ## Testing if the devices can send/receive messages:
 1. Alt + C to switch to consoles working mode
@@ -18,7 +19,7 @@ The following should be done to each device. Saving the device profile will spee
 3. In Python, give the following commands:
     ```python
     from digi.xbee.devices import XBeeDevice
-    device = XBeeDevice("COM5", 9600) # COM port of the sending module
+    device = XBeeDevice("COM5", 115200) # COM port of the sending module
     device.open()
     device.send_data_broadcast("Hello World!")
     device.close()
