@@ -5,7 +5,7 @@
 # Send hello world to network
 from digi.xbee.devices import XBeeDevice
 import time
-device = XBeeDevice("COM5", 9600) # COM port of the sending module
+device = XBeeDevice("COM5", 115200) # COM port of the sending module
 device.open()
 device.send_data_broadcast("Hello World!") # Check receiving device for results :D
 
