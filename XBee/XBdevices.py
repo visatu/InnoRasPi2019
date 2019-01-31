@@ -10,11 +10,15 @@ deviceTypes = {
             "line": IOLine.DIO4_AD4,
             "mode": IOMode.DIGITAL_IN
         },
-
         "AD3": {
             "line": IOLine.DIO3_AD3,
             "mode": IOMode.ADC
-        }
+        },
+        "PWM0": {
+            "line": IOLine.DIO10_PWM0,
+            "mode": IOMode.PWM
+        },
+
     }
 }
 # could maybe add modifiers to get human readable values
