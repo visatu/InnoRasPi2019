@@ -1,6 +1,7 @@
 from digi.xbee.io import IOLine, IOMode
 
 # device type library with io pin lines and modes :D
+# this should be easier to use than memorizing each pins real name, since you can give whatever name you want to the pins. Using names from Grove board for now.
 deviceTypes = {
     "ANALOG": {
         "DIO4": {"line": IOLine.DIO4_AD4,
@@ -22,4 +23,4 @@ deviceTypes = {
     }
 }
 # could maybe add modifiers to get human readable values
-# eg. multiplier for binary voltage value to get real measurement
+# eg. multiplier for 10 bit voltage value to get real measurement: 0-1023 --> temperature reading, for example
