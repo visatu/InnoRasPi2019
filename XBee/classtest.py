@@ -1,20 +1,16 @@
-from digi.xbee.devices import XBeeDevice
+from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
 ### own stuff , check em out!
-from XBclass import XBeePin
-from XBdevices import getNetworkDevices
+from XBclass import masterXBee
+# conf
+xbPort = "COM6"
+baud = 921600
 
-# functional :D
-
-local_xbee = XBeeDevice("/dev/ttyUSB6", 921600)
-local_xbee.open()
-remoteXbees = getNetworkDevices(local_xbee)
-adcSensor = XBeePin(remoteXbees["ANALOG"],"ANALOG","AD3")
-btnSensor = XBeePin(remoteXbees["ANALOG"],"ANALOG", "DIO4")
-pwmPin = XBeePin(remoteXbees["ANALOG"], "ANALOG", "PWM0")
-
-# pwm pin 66% duty cycle
-pwmPin.write_pin(50)
+# open local "master" xbee :D
+local = masterXBee(xbPort, baud)
 while True:
-    print(adcSensor.get_raw_value(), btnSensor.get_raw_value())
-
-local_xbee.close()
+    # reading values from sensors
+    btnVal = local.sensors["BUTTON"]["DIO1"].get_raw_value()
+    print(local.sensors["ANALOG"]["AD3"].get_raw_value(),end=" | ")
+    print(btnVal)
+    # light up pin on ANALOG board when button on BUTTON pressed!
+    local.sensors["ANALOG"]["DIO4"].write_dio(btnVal)
