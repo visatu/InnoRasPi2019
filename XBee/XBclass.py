@@ -17,6 +17,7 @@ class XBeeSensor:
         self.pinMode = deviceTypes[self.dvcType][self.ioPin]["mode"]
         self.xbee.set_io_configuration(self.pinLine,self.pinMode)
         print(" ...OK!")
+        
     def get_raw_value(self):
         value = None
         if self.pinMode == IOMode.ADC:

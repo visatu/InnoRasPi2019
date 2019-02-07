@@ -2,7 +2,7 @@ from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
 ### own stuff , check em out!
 from XBclass import masterXBee
 # conf
-xbPort = "COM6"
+xbPort = "/dev/ttyUSB1"
 baud = 921600
 
 # open local "master" xbee :D
