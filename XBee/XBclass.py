@@ -2,8 +2,8 @@ from digi.xbee.io import IOLine, IOMode, IOValue
 from digi.xbee.devices import XBeeDevice
 # omat
 from XBdevices import deviceTypes
-import time
-
+import time,math
+IOValue.HIGH
 
 # Hypotethical class for a single sensor?
 class XBeeSensor:
@@ -45,6 +45,28 @@ class XBeeSensor:
         else:
             print("invalid pin mode!")
 
+    def get_ntc_temp(self):
+        """ Returns NTC read temperature in Celsius"""
+        R1 = 10000          # series resistor
+        R0 = 10000          # NTC starting value
+        T0 = 273 + 25       # Temp reference value in kelvins (273.15+25)
+        Vs = 3.3            # supply voltage
+        Vref = 3.3          # voltage reference
+        Bval = 3450         # NTC B value
+
+        # get ADC value
+        ADC_value = self.get_raw_value()
+        # convert to analog voltage
+        Vt = ADC_value/1023 * Vref
+        # Vs---R1---(Sense)---tempR---GND
+        tempR = Vt / (Vs-Vt) * R1
+        # https://en.wikipedia.org/wiki/Thermistor#B_or_%CE%B2_parameter_equation
+        tempK = Bval / math.log(tempR / (R0 * math.exp(-1 * Bval / T0)))
+        # convert back to Celsius
+        tempC = tempK - 273
+        print("NTC_convert\tADC: %04i\tR: %5.00f\tT: %.02f" %(ADC_value, tempR ,tempC))
+        return tempC
+
 
 class masterXBee:
     '''
@@ -52,21 +74,22 @@ class masterXBee:
     port = used COM/tty port
     baud = used baud rate
     deviceType = chosen device type from XBdevices.deviceTypes
-    sensors = dict of all the devices in locals network and their sensors!
+    devices = dict of all the devices in locals network and their sensors!
     '''
-    sensors = {}
+    devices = {}
     def __init__(self, port, baud):
         print("Opening local device", port, baud)
         self.xb = XBeeDevice(port,baud)
         self.xb.open()
         self.deviceType = self.xb.get_node_id()
-        self.remotes = self.getNetworkDevices()
-        for device in self.remotes:
+        self.xbees = self.getNetworkDevices()
+        for device in self.xbees:
             deviceType = device.get_node_id()
-            self.sensors.update({deviceType:{}})
+            self.devices.update({deviceType:{}})
             for pin in deviceTypes[deviceType]:
                 sensor = XBeeSensor(pin, device)
-                self.sensors[deviceType][pin] = sensor
+                self.devices[deviceType][pin] = sensor
+
     def getNetworkDevices(self):
         """
         Returns devices in the network of given local xBee device, including the local device
