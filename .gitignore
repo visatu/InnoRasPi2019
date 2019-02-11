@@ -1,2 +1,3 @@
+*.pyc
 XBee/__pycache__/*
 .vscode/*
