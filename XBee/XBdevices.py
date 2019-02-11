@@ -18,7 +18,15 @@ deviceTypes = {
                   "mode": IOMode.DIGITAL_IN},
         },
     "LOCAL":{
-        "DIO4": {"line": IOLine.DIO4_AD4,
+        "TMP": {"line": IOLine.DIO0_AD0,
+                 "mode": IOMode.ADC},
+        "BTN": {"line": IOLine.DIO4_AD4,
+                 "mode": IOMode.DIGITAL_IN},
+        "SND": {"line": IOLine.DIO12,
+                 "mode": IOMode.DIGITAL_IN},
+        "LIG": {"line": IOLine.DIO3_AD3,
+                 "mode": IOMode.ADC},
+        "TLT": {"line": IOLine.DIO1_AD1,
                  "mode": IOMode.DIGITAL_IN},
     }
 }

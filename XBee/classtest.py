@@ -12,12 +12,10 @@ master = masterXBee(xbPort, baud)
 # list of connected devices
 print(master.devices)
 # write digital value to pin
-master.devices["ANALOG"]["DIO4"].write_dio(IOValue.HIGH)
 while True: # loop
-    # get raw ADC value
-    print(master.devices["ANALOG"]["AD3"].get_raw_value())
-    # function to get raw digital value
-    #master.devices["ANALOG"]["DIO4"].get_raw_value()
-    # function to get NTC value (will print out result in console as well)
-    master.devices["ANALOG"]["AD3"].get_ntc_temp()
+    print(master.devices["LOCAL"]["TMP"].get_ntc_temp(),end=" | ")
+    print(master.devices["LOCAL"]["BTN"].get_raw_value(),end=" | ")
+    print(master.devices["LOCAL"]["SND"].get_raw_value(),end=" | ")
+    print(master.devices["LOCAL"]["LIG"].get_raw_value(),end=" | ")
+    print(master.devices["LOCAL"]["TLT"].get_raw_value())
     time.sleep(.5)
