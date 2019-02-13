@@ -8,3 +8,4 @@ Raspi inno 2019
 - äänenvoimakkuus/voimakkaiden äänien tunnistus (clapper?)
 - kallistuksen tunnistus
 - general DIO
+- painosensori "pressure plate" tyylil
