@@ -1,4 +1,4 @@
 # this is a file for required modules to install with pip
-# install with pip install -r
+# install with pip install -r ./requirements.txt
 digi-xbee == 1.1.1
 flask == 1.0.2

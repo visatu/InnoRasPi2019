@@ -1,3 +1,6 @@
+# Tän filun ku pyörittää voi kattoo tota nettisivu pohjaa
+# pöräyttää käyntii weppi servun local hostille
+
 from flask import Flask, render_template
 import random
 app = Flask(__name__)
