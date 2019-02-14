@@ -1,0 +1,20 @@
+<!-- tän pitäs mennä layout html:än kaut ? :D -->
+{% extends "layout.html" %}
+<!-- blokin sisälle se mikä menis bodyy muute -->
+{% block content %}
+    <h1>Sensor values</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sensor</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        {% for value in values %}
+            <tr>
+                <th>{{value}}</th>
+                <th>{{values[value]}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
