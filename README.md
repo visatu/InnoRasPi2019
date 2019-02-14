@@ -12,6 +12,8 @@ Tää on tää raspi inno python projekti :D
 
 ### Flask
 - Flask puoli jotakuinki suoraa apinoitu ekast parist videost: https://www.youtube.com/playlist?list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH tosin nois näyttäs olevan aika paljo muutaki kivaa
+- Real time päivityst weppi sivulle: https://flask-socketio.readthedocs.io/en/latest/
+
 ### Bootstrap
 - Vakio bootstrap doku: https://getbootstrap.com/docs/4.3/getting-started/introduction/
 - W3 tutoriaalei ja esimerkkei: https://www.w3schools.com/bootstrap4/default.asp
