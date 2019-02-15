@@ -1,20 +1,21 @@
-<!-- tän pitäs mennä layout html:än kaut ? :D -->
+<!-- link this file to layout.html -->
 {% extends "layout.html" %}
-<!-- blokin sisälle se mikä menis bodyy muute -->
+<!-- inside block named "content" goes the content we want to display on page-->
 {% block content %}
-    <h1>Sensor values</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Sensor</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        {% for value in values %}
-            <tr>
-                <th>{{value}}</th>
-                <th>{{values[value]}}</th>
-            </tr>
-        {% endfor %}
-    </table>
+
+<h1>Sensor values</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sensor</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    {% for value in values %}
+        <tr>
+            <th>{{value}}</th>
+            <th id="{{value}}">{{values[value]}}</th>
+        </tr>
+    {% endfor %}
+</table>
 {% endblock content %}

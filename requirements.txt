@@ -2,3 +2,5 @@
 # install with pip install -r ./requirements.txt
 digi-xbee == 1.1.1
 flask == 1.0.2
+Flask-SocketIO == 3.2.2
+eventlet == 0.24.1

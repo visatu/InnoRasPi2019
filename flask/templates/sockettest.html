@@ -1,0 +1,29 @@
+<!-- link this file to layout.html -->
+{% extends "layout.html" %}
+<!-- inside block named "content" goes the content we want to display on page-->
+{% block content %}
+    <h1>socket testi sivu :D</h1>
+    <p id="valuedisplay">Testi arvo ! :D</p>
+
+    <!-- socketIO & oma java scripti -->
+    <script src="../static/socket.io/socket.io.slim.js"></script>
+    <script>
+        // init socket connection
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        // ask for new values once a second = 1000 ms
+        var timer = setInterval(timedfunc, 1000);
+        // say hello :)
+        socket.on('connect', function() {
+            socket.emit('hello', {data: 'I\'m connected!'});
+        });
+        // what to do with received data
+        socket.on('ok here', function(data) {
+            document.getElementById("valuedisplay").innerHTML = data["value"];
+        });
+
+        // function that asks for data
+        function timedfunc(){
+            socket.emit('give data');
+        };
+    </script>
+{% endblock content %}
