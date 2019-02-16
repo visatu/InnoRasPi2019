@@ -1,0 +1,30 @@
+<!-- link this file to layout.html -->
+{% extends "layout.html" %}
+<!-- inside block named "content" goes the content we want to display on page-->
+{% block content %}
+<h1>Connected devices</h1>
+<!-- card deck for devices with own card for each device -->
+<div class="card-deck">
+    <!-- create a card for each device in dictionary -->
+    {% for device in devices %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">DEVICE: {{device.upper()}}</h5>
+            <p class="card-text">
+                <p>Type: {{devices[device]["type"]}}</p>
+                <!-- list all sensors -->
+                <p>Sensors:
+                    <ol>
+                        {% for sensor in devices[device]["sensors"] %}
+                        <li>{{sensor}}</li>
+                        {% endfor %}
+                    </ol>
+                </p>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
+
+

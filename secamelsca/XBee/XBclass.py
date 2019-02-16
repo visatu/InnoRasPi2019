@@ -1,7 +1,7 @@
 from digi.xbee.io import IOLine, IOMode, IOValue
 from digi.xbee.devices import XBeeDevice
 # omat
-from XBdevices import deviceTypes
+from XBee.XBdevices import deviceTypes
 import time,math
 
 class XBeeSensor:

@@ -7,11 +7,11 @@ from digi.xbee.io import IOLine, IOMode
 deviceTypes = {
     "ANALOG": {
         "DIO4": {"line": IOLine.DIO4_AD4,
-                 "mode": IOMode.DIGITAL_OUT_HIGH},
-        "AD3": {"line": IOLine.DIO3_AD3,
+                 "mode": IOMode.DIGITAL_IN},
+        "AD3": {"line": IOLine.DIO0_AD0,
                 "mode": IOMode.ADC},
-        "PWM0": {"line": IOLine.DIO10_PWM0,
-                 "mode": IOMode.PWM},
+        # "PWM0": {"line": IOLine.DIO10_PWM0,
+        #          "mode": IOMode.PWM},
         },
     "BUTTON": {
         "DIO4": {"line": IOLine.DIO4_AD4,
@@ -24,12 +24,12 @@ deviceTypes = {
                  "mode" : IOMode.ADC},
         "BTN": {"line": IOLine.DIO4_AD4,
                  "mode": IOMode.DIGITAL_IN},
-        "SND": {"line": IOLine.DIO12,
-                 "mode": IOMode.DIGITAL_IN},
-        "LIG": {"line": IOLine.DIO3_AD3,
-                 "mode": IOMode.ADC},
-        "TLT": {"line": IOLine.DIO1_AD1,
-                 "mode": IOMode.DIGITAL_IN},
+        # "SND": {"line": IOLine.DIO12,
+        #          "mode": IOMode.DIGITAL_IN},
+        # "LIG": {"line": IOLine.DIO3_AD3,
+        #          "mode": IOMode.ADC},
+        # "TLT": {"line": IOLine.DIO1_AD1,
+        #          "mode": IOMode.DIGITAL_IN},
     }
 }
 

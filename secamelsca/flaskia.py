@@ -1,36 +1,33 @@
 # This file spins up the flask web server and handles serving sites etc stuff
-
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import random
-app = Flask(__name__)
-socketio = SocketIO(app)
 
-# dict to store random "sensor" data
-sensor_values = {
-    "temp1" : 23.4,
-    "temp2" : 23.2,
-    "plate" : "HIGH",
-    "button": "HIGH",
-}
+
+
+
+######### FLASK PART #######################
+site = Flask(__name__)
+socketio = SocketIO(site)
 
 ############ different pages we want to have  #############
 # the function names dont seem to matter as long
 # as they all have different names :D
 
 # homepage
-@app.route('/')
-def keksittynimi(): 
+@site.route('/')
+def homepage(): 
     return(render_template("home.html", title="Home"))
 
 # helloworld :)
-@app.route("/helloworld")
-def testi2():
-    return(render_template("helloworld.html", title="Hello World!"))
+@site.route("/devices")
+def devicepage():
+    return(render_template("devices.html", title="Hello World!",
+        devices=))
 
 # sensors list page
-@app.route("/sensors")
-def sensors():
+@site.route("/sensors")
+def sensorpage():
     # this function gives random values to sensors page each time it gets loaded
     # see sensors.html for how the flask/jinja code handles the given dict variable.
     sensor_values["temp1"] = "{:.1f}".format(random.random() * 100)
@@ -41,8 +38,8 @@ def sensors():
     # give new values for sensors
 
 # socket io test page !!!
-@app.route("/sockettest")
-def socket_testi_sivu():
+@site.route("/sockettest")
+def socket_test_page():
     return(render_template("sockettest.html", title="SocketIO Test Page!"))
 
 
@@ -63,6 +60,6 @@ def send_data():
     socketio.emit("ok here", {"value" : random.randint(1,10)} )
 
 
-# this runs the app (with socketio enabled)
+# this runs the site (with socketio enabled)
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(site, debug=True)
