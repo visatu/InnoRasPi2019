@@ -11,6 +11,7 @@ Tää on tää raspi inno python projekti :D
 - Grove board: https://www.digi.com/resources/documentation/digidocs/pdfs/90001457-13.pdf
 
 ### Flask
+- Flask documentation: http://flask.pocoo.org/docs/1.0/
 - Flask puoli jotakuinki suoraa apinoitu ekast parist videost: https://www.youtube.com/playlist?list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH tosin nois näyttäs olevan aika paljo muutaki kivaa
 - Real time päivityst weppi sivulle: https://flask-socketio.readthedocs.io/en/latest/
 
