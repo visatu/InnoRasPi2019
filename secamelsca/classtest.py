@@ -1,14 +1,14 @@
-from XBclass import masterXBee
-# conf
-xbPort = "com6"
-baud = 115200
+from XBee.XBclass import masterXBee
+import time
+from threading import Thread
+
 
 # open local "master" xbee :D
-master = masterXBee(xbPort, baud)
-# list of connected devices
-print(master.devices)
-for dev in master.devices:
-    for sensor in master.devices[dev].sensors:
-        if sensor == "NTC":
-            val = master.devices[dev].sensors[sensor].general_IO()
-            print(str(val))
+master = masterXBee(port="com6", baud="921600")
+# start polling sensors in a new thread
+xbeethread = Thread(target=master.polling_start, args=(0.01,))
+xbeethread.start()
+time.sleep(1)
+
+print(master.get_device_data())
+print(master.get_sensor_data())
