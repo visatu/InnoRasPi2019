@@ -2,29 +2,66 @@
 {% extends "layout.html" %}
 <!-- inside block named "content" goes the content we want to display on page-->
 {% block content %}
-<h1>Connected devices</h1>
-<!-- card deck for devices with own card for each device -->
-<div class="card-deck">
-    <!-- create a card for each device in dictionary -->
-    {% for device in devices %}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">DEVICE: {{device.upper()}}</h5>
-            <p class="card-text">
-                <p>Type: {{devices[device]["type"]}}</p>
-                <!-- list all sensors -->
-                <p>Sensors:
-                    <ol>
-                        {% for sensor in devices[device]["sensors"] %}
-                        <li>{{sensor}}</li>
-                        {% endfor %}
-                    </ol>
+    <h1>Connected devices</h1>
+    <!-- card deck for devices with own card for each device -->
+    <div class="card-deck">
+        <!-- create a card for each device in dictionary -->
+        {% for device in devices %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">DEVICE: {{device.upper()}}</h5>
+                <p class="card-text">
+                    <p>Type: <b>{{devices[device]["type"]}}</b></p>
+                    <!-- list all sensors -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sensor</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for sensor in devices[device]["sensors"] %}
+                                <tr>
+                                    <td>{{sensor}}</td>
+                                    <td id={{device + sensor}}>None</td>
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
                 </p>
-            </p>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+
+
+    <!-- value update script -->
+    <script src="../static/socket.io/socket.io.slim.js"></script>
+    <script>
+        // init socket connection
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        // ask for new values once a second = 1000 ms
+        var timer = setInterval(timedfunc, 1000);
+        // function that asks for data
+        function timedfunc(){
+            socket.emit('sensordata');
+        };
+        // say hello :)
+        socket.on('connect', function() {
+            socket.emit('hello', {data: 'I\'m connected!'});
+        });
+        socket.on('sensordata_out', function(devices){
+            var dvc, sen, val;
+            for (dvc in devices){
+                for (sen in devices[dvc]){
+                    val = devices[dvc][sen]
+                    document.getElementById(dvc + sen).innerHTML = val
+                }
+            }
+        });
+        document.getElementById("valuedisplay").innerHTML = data["value"];
+
+
+    </script>
 {% endblock content %}
-
-

@@ -3,28 +3,9 @@ from XBee.XBclass import masterXBee
 # This file spins up the flask web server and handles serving sites etc stuff
 from flask import Flask, render_template
 from flask_socketio import SocketIO
+from threading import Thread
 import random
 
-# conf
-xbPort = "com6"
-baud = 115200
-
-# open local "master" xbee :D
-master = masterXBee(xbPort, baud)
-# gotta tear down class for flask output :D
-devicedata = {}
-for device in master.devices:
-        dvcID = master.devices[device].id
-        dvcType = master.devices[device].type
-        sensorlist = []
-        for sensor in master.devices[device].sensors:
-                sensorlist.append(sensor)
-        devicedata.update({dvcID : {
-                "type" : dvcType,
-                "sensors" : sensorlist,
-                }
-        })
-print(devicedata)
 ######### FLASK PART #######################
 site = Flask(__name__)
 socketio = SocketIO(site)
@@ -41,25 +22,7 @@ def homepage():
 # helloworld :)
 @site.route("/devices")
 def devicepage():
-    return(render_template("devices.html", title="Hello World!",
-        devices=devicedata))
-
-# sensors list page
-@site.route("/sensors")
-def sensorpage():
-    # this function gives random values to sensors page each time it gets loaded
-    # see sensors.html for how the flask/jinja code handles the given dict variable.
-    sensor_values["temp1"] = "{:.1f}".format(random.random() * 100)
-    sensor_values["temp2"] = "{:.1f}".format(random.random() * 100)
-    sensor_values["plate"] = random.choice(["LOW", "HIGH"])
-    sensor_values["button"] = random.choice(["LOW", "HIGH"])
-    return(render_template("sensors.html", values=sensor_values, title="Sensors"))
-    # give new values for sensors
-
-# socket io test page !!!
-@site.route("/sockettest")
-def socket_test_page():
-    return(render_template("sockettest.html", title="SocketIO Test Page!"))
+    return(render_template("devices.html", title="Hello World!", devices=master.get_device_data()))
 
 
 ############  SocketIO event callbacks ##############################
@@ -72,13 +35,17 @@ def get_hello(received):
     # just print received message on the console
     print("received hello message:" + str(received["data"]))
 
-# reaction to request for updated value 
-@socketio.on("give data")
-def send_data():
-    # respond with "ok here" and with a dict containing updated value
-    socketio.emit("ok here", {"value" : random.randint(1,10)} )
 
+@socketio.on("sensordata")
+def send_sensor_values():
+    socketio.emit("sensordata_out", master.get_sensor_data())
 
-# this runs the site (with socketio enabled)
 if __name__ == "__main__":
+    
+    # open local "master" xbee :D
+    master = masterXBee(port="com6", baud="921600")
+    # start polling sensors in a new thread
+    xbeethread = Thread(target=master.polling_start, args=(0.01,))
+    xbeethread.start()
+    # this runs the site (with socketio enabled)    
     socketio.run(site, debug=True, use_reloader=False)
