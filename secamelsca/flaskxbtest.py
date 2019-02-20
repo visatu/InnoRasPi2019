@@ -6,7 +6,7 @@ from flask_socketio import SocketIO
 from threading import Thread
 import random
 
-######### FLASK PART #######################
+######### FLASK PART ######################
 site = Flask(__name__)
 socketio = SocketIO(site)
 
