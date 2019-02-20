@@ -1,5 +1,5 @@
 # importing from subdirectory "XBee" that has __init__.py file inside so it's recognised!
-from XBee.XBclass import masterXBee
+from XBclass import masterXBee
 # This file spins up the flask web server and handles serving sites etc stuff
 from flask import Flask, render_template
 from flask_socketio import SocketIO
@@ -22,7 +22,7 @@ def homepage():
 # helloworld :)
 @site.route("/devices")
 def devicepage():
-    return(render_template("devices.html", title="Hello World!", devices=master.get_device_data()))
+    return(render_template("devices.html", title="Hello World!", devices=master.devicedata))
 
 
 ############  SocketIO event callbacks ##############################
@@ -38,14 +38,20 @@ def get_hello(received):
 
 @socketio.on("sensordata")
 def send_sensor_values():
-    socketio.emit("sensordata_out", master.get_sensor_data())
+    socketio.emit("sensordata_out", master.sensordata)
+
+
+def callbackfunction(sensor, value):
+    if value == "LOW":
+        master.general_io(master.devices["0013A200418734DC"].sensors["LED"], "LOW")
+    elif value == "HIGH":
+        master.general_io(master.devices["0013A200418734DC"].sensors["LED"], "HIGH")
+
 
 if __name__ == "__main__":
-    
     # open local "master" xbee :D
-    master = masterXBee(port="com6", baud="921600")
-    # start polling sensors in a new thread
-    xbeethread = Thread(target=master.polling_start, args=(0.01,))
-    xbeethread.start()
-    # this runs the site (with socketio enabled)    
+    master = masterXBee(port="com6", baud="921600", callback_handler=callbackfunction)
+    master.register_callbacks([master.devices["0013A200418724A6"].sensors["BTN"]], None)
+    master.polling_start()
+    #run flask site
     socketio.run(site, debug=True, use_reloader=False)
