@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -58,4 +58,4 @@ if __name__ == "__main__":
     master.register_callbacks([master.devices["0013A200418724A6"].sensors["BTN"]], None)
     master.polling_start()
     #run flask site
-    socketio.run(site, debug=True, use_reloader=False)
+    socketio.run(site, debug=True, use_reloader=False, host="0.0.0.0")
