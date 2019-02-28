@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from digi.xbee.io import IOLine, IOMode, IOValue
 from digi.xbee.devices import XBeeDevice
 import digi.xbee.exception, serial.serialutil
@@ -193,8 +196,8 @@ class masterXBee:
             # except ValueError:
             #     pass
             # or just skip everything. for now.
-            except:
-                print("ERROR IN VALUE READ!")
+            except Exception as error:
+                print("ERROR IN VALUE READ:", str(error))
                 pass
         # if NTC, convert to celcius
         if sensor.pinType == "NTC":

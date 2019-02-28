@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 # importing from subdirectory "XBee" that has __init__.py file inside so it's recognised!
 from XBclass import masterXBee
 # This file spins up the flask web server and handles serving sites etc stuff
@@ -43,14 +47,14 @@ def send_sensor_values():
 
 def callbackfunction(sensor, value):
     if value == "LOW":
-        master.general_io(master.devices["0013A200418734DC"].sensors["LED"], "LOW")
+        master.general_io(master.devices["0013A20041873060"].sensors["LED"], "LOW")
     elif value == "HIGH":
-        master.general_io(master.devices["0013A200418734DC"].sensors["LED"], "HIGH")
+        master.general_io(master.devices["0013A20041873060"].sensors["LED"], "HIGH")
 
 
 if __name__ == "__main__":
     # open local "master" xbee :D
-    master = masterXBee(port="com6", baud="921600", callback_handler=callbackfunction)
+    master = masterXBee(port="com19", baud="921600", callback_handler=callbackfunction)
     master.register_callbacks([master.devices["0013A200418724A6"].sensors["BTN"]], None)
     master.polling_start()
     #run flask site
