@@ -3,8 +3,18 @@
     -RasPi dev
     -XBee dev
     -other?
+
+-Abstract dev:
+    -name
+    -dev type
+    -sensors list
+-Abstract sensor
+    -name
+    -sensor type
+    -value
+
 -master class for single actuator/sensor
--Message class for communication between main and communications module
+-Message class for communication between main and communications module:
     -Msg type
     -timestamp
     -name

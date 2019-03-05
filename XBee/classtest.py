@@ -4,7 +4,7 @@ from digi.xbee.io import IOValue
 from XBclass import masterXBee
 import time, math
 # conf
-xbPort = "com6"
+xbPort = "/dev/ttyUSB0"
 baud = 115200
 
 # open local "master" xbee :D
