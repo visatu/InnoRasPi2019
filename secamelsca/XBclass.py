@@ -5,7 +5,7 @@ from digi.xbee.io import IOLine, IOMode, IOValue
 from digi.xbee.devices import XBeeDevice
 import digi.xbee.exception, serial.serialutil
 import time,math
-from threading import Thread
+from threading import Thread,Semaphore
 from XBDevices import deviceTypes
 
 # threading for some functions (mainly for sensor polling)
@@ -36,7 +36,12 @@ class masterXBee:
     # flask readable sensor data dictionary
     sensordata = {}
 
+    
+    
+
     def __init__(self, port, baud, callback_handler=None):
+        #Semaphore for XBee action, limits acces to single user at a time
+        self.sema = Semaphore()
         # instantiate local XBee device
         print("Opening local device", port, baud)
         self.localXB = XBeeDevice(port,baud)
@@ -99,6 +104,7 @@ class masterXBee:
                     self.sensor_update_value(self.devices[dvc].sensors[sensor])
             time.sleep(interval)
 
+   
     def polling_stop(self):
         "stop sensor value updating"
         self.polling = False
@@ -156,6 +162,7 @@ class masterXBee:
         """
         Function to read and write values from/to this sensor. Give value if you want to write, otherwise assumes you're reading stuff :D
         """
+        self.sema.acquire()
         value_out=None
         for attempt in range(10):
             try:
@@ -191,6 +198,7 @@ class masterXBee:
                         break
             # errors that xbee gives when doing lots of stuff through serial.. . :D
             # might want to implement queue.
+            # Added semaphores to compat this
             # except digi.xbee.exception.TimeoutException:
             #     pass
             # except ValueError:
@@ -203,6 +211,7 @@ class masterXBee:
         if sensor.pinType == "NTC":
             if value_out:
                 value_out = self.ntc_convert(value_out)
+        self.sema.release()
         return value_out
 
     def ntc_convert(self, ADC_value):

@@ -10,17 +10,19 @@ class message:
         self.msgid = uuid4()
 
 class msgValue(message):
-    def __init__(self,name,value,request):
-        message.__init__(self,1, name)
+    def __init__(self,devName,sensName,value, digital):
+        message.__init__(self,1, devName + ";" + sensName)
+        self.devName = devName
+        self.sensName = sensName
         self.value = value
-        self.request = request
+        self.digital = digital
+        
 
 class msgDevChange(message):
-    def __init__(self,name,new,device,sensors):
-        message.__init__(self,2,name)
-        self.new = new
+    def __init__(self,name,device):
+        message.__init__(self,2,name)        
         self.device = device
-        self.sensors = sensors
+        
 
    
 
