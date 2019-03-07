@@ -163,7 +163,7 @@ class masterXBee:
                 if sensor.pinMode == IOMode.PWM:
                     if value_in:
                         if (0 < int(value_in) < 100):
-                            sensor.xbee.set_pwm_duty_cycle(sensor.pinLine, value)
+                            sensor.xbee.set_pwm_duty_cycle(sensor.pinLine, value_in)
                             value_out = value_in
                         break
                 # ADC read
