@@ -1,11 +1,12 @@
 from multiprocessing import Queue, Process
 #import communication.CommMod
 from communication.CommMod import Commstart, msgValue
+from secamelsca import XBclass
 def main():
     print("start")
-    qout = Queue()
+    qoutComm = Queue()
     qin = Queue()
-    p = Process(target=Commstart, args=(qin,qout,0))
+    p = Process(target=Commstart, args=(qin,qoutComm,0))
     p.start()
     print("start 2")
     while True:

@@ -1,5 +1,4 @@
-from /../../secamelsca/XBclass import XBeeDev, XBeeSensor
-
+from ..import secamelsca.XBclass
 class absBase:
     def __init__(self, name, devtype):
         self.name = name
@@ -10,12 +9,6 @@ class absDev(absBase):
         absBase.__init__(self,name,devtype)
         self.sensorsList = {}
         self.protocol = protocol
-
-    
-
-
-
-
     
     def addSensor(self,sensor):
         self.sensorsList.append(sensor.name:sensor)

@@ -1,4 +1,8 @@
-from XBclass import masterXBee, XBeeDev, XBeeSensor
+
+from ..import secamelsca.XBclass
+
+
+
 from uuid import uuid4, UUID
 from datetime import datetime
 from CommMsg import msgDevChange, msgValue
