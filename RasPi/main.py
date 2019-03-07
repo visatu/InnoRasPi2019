@@ -11,7 +11,7 @@ def main():
     while True:
         msg = qin.get()
         msgSolver(msg)
-
+        
 
 def msgSolver(msg):
     if msg.type == 1:
