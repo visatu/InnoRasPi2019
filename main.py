@@ -50,11 +50,11 @@ def callbackfunction(sensor, value):
             master.general_io(master.devices["0013A200418724A6"].sensors["DOORBELL_BUZZER"], "HIGH")
         elif value == "HIGH":
             master.general_io(master.devices["0013A200418724A6"].sensors["DOORBELL_BUZZER"], "LOW")
-    else:
-        if value == "LOW":
-            master.general_io(master.devices["0013A20041873060"].sensors["LED"], "LOW")
-        elif value == "HIGH":
-            master.general_io(master.devices["0013A20041873060"].sensors["LED"], "HIGH")
+    # else:
+    #     if value == "LOW":
+    #         master.general_io(master.devices["0013A20041873060"].sensors["WGT_LED"], "LOW")
+    #     elif value == "HIGH":
+    #         master.general_io(master.devices["0013A20041873060"].sensors["WGT_LED"], "HIGH")
 
 def get_local_ip():
     # https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
@@ -85,9 +85,9 @@ if __name__ == "__main__":
     # open local "master" xbee :D
     master = masterXBee(port=xb_port, baud=xb_baud, callback_handler=callbackfunction)
     # register DOOR device's DOORBELL sensor as a callback
-    master.register_callback("0013A200418734DC",["DOORBELL", "WEIGHT_PLATE"])
+    master.register_callback("0013A200418734DC",["DOORBELL"])
 
-    master.polling_start(interval=1)
+    master.polling_start(interval=0.5)
     #run flask site
     print("Local IP:", get_local_ip())
     print("Starting Flask...")
