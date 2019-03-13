@@ -10,26 +10,26 @@ deviceTypes = {
     "MASTER": {
         "POTENTIOMETER": {"line": IOLine.DIO0_AD0,
                 "mode": IOMode.ADC},
-        "USER_BUTTON": {"line": IOLine.DIO4_AD4,
-                "mode": IOMode.DIGITAL_IN},
         "DOORBELL_BUZZER": {"line": IOLine.DIO12,
-                "mode": IOMode.DIGITAL_OUT_LOW
-                },
+                "mode": IOMode.DIGITAL_OUT_LOW},
+        "WGT_LED": {"line": IOLine.DIO4_AD4,
+                "mode": IOMode.DIGITAL_OUT_LOW},
     },
     "ROOM": {
-        "LED": {"line": IOLine.DIO4_AD4,
+        "LED_TEMP": {"line": IOLine.DIO4_AD4,
                 "mode": IOMode.DIGITAL_OUT_HIGH},
         "LIGHTNESS": {"line": IOLine.DIO3_AD3,
                 "mode": IOMode.ADC},
         "TEMP_NTC": {"line": IOLine.DIO0_AD0,
                 "mode": IOMode.ADC,
                 "trigger": {
-                        "target": "LED",
+                        "target": "LED_TEMP",
                         "limit": 30
                         },
                 },
     },
     "DOOR": {
+        
         "DOORBELL": {
                 "line": IOLine.DIO4_AD4,
                 "mode": IOMode.DIGITAL_IN},
@@ -37,7 +37,7 @@ deviceTypes = {
                 "line": IOLine.DIO1_AD1,
                 "mode": IOMode.DIGITAL_IN,
                 "trigger": {
-                        "target": "DOORBELL_BUZZER",
+                        "target": "WGT_LED",
                         "limit": "LOW"
                         },
                 },
