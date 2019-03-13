@@ -46,16 +46,23 @@ def send_sensor_values():
 
 
 def callbackfunction(sensor, value):
-    if value == "LOW":
-        master.general_io(master.devices["0013A20041873060"].sensors["LED"], "LOW")
-    elif value == "HIGH":
-        master.general_io(master.devices["0013A20041873060"].sensors["LED"], "HIGH")
+    if sensor == "DOORBELL":
+        if value == "LOW":
+            master.general_io(master.devices["0013A200418724A6"].sensors["DOORBELL_BUZZER"], "HIGH")
+        elif value == "HIGH":
+            master.general_io(master.devices["0013A200418724A6"].sensors["DOORBELL_BUZZER"], "LOW")
+    else:
+        if value == "LOW":
+            master.general_io(master.devices["0013A20041873060"].sensors["LED"], "LOW")
+        elif value == "HIGH":
+            master.general_io(master.devices["0013A20041873060"].sensors["LED"], "HIGH")
 
 
 if __name__ == "__main__":
     # open local "master" xbee :D
-    master = masterXBee(port="com19", baud="921600", callback_handler=callbackfunction)
-    master.register_callbacks([master.devices["0013A200418724A6"].sensors["BTN"]], None)
+    master = masterXBee(port="com6", baud="921600", callback_handler=callbackfunction)
+    # register DOOR device's DOORBELL sensor as a callback
+    master.register_callback("0013A200418734DC",["DOORBELL", "WEIGHT_PLATE"])
     master.polling_start()
     #run flask site
     socketio.run(site, debug=True, use_reloader=False, host="0.0.0.0")

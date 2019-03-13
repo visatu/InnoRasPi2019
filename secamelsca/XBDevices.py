@@ -2,21 +2,38 @@ from digi.xbee.io import IOLine, IOMode
 
 deviceTypes = {
     "MASTER": {
-        "NTC": {"line": IOLine.DIO0_AD0,
+        "POTENTIOMETER": {"line": IOLine.DIO0_AD0,
                 "mode": IOMode.ADC},
-        "BTN": {"line": IOLine.DIO4_AD4,
+        "USER_BUTTON": {"line": IOLine.DIO4_AD4,
                 "mode": IOMode.DIGITAL_IN},
-        # "SND": {"line": IOLine.DIO12,
-        #          "mode": IOMode.DIGITAL_IN},
-        # "LIG": {"line": IOLine.DIO3_AD3,
-        #          "mode": IOMode.ADC},
-        # "TLT": {"line": IOLine.DIO1_AD1,
-        #          "mode": IOMode.DIGITAL_IN},
+        "DOORBELL_BUZZER": {"line": IOLine.DIO12,
+                "mode": IOMode.DIGITAL_OUT_LOW
+                },
     },
-    "REMOTE": {
+    "ROOM": {
         "LED": {"line": IOLine.DIO4_AD4,
                 "mode": IOMode.DIGITAL_OUT_HIGH},
-        "AD0": {"line": IOLine.DIO0_AD0,
+        "LIGHTNESS": {"line": IOLine.DIO3_AD3,
                 "mode": IOMode.ADC},
+        "TEMP_NTC": {"line": IOLine.DIO0_AD0,
+                "mode": IOMode.ADC,
+                "trigger": {
+                        "target": "LED",
+                        "limit": 30
+                        },
+                },
     },
+    "DOOR": {
+        "DOORBELL": {
+                "line": IOLine.DIO4_AD4,
+                "mode": IOMode.DIGITAL_IN},
+        "WEIGHT_PLATE": {
+                "line": IOLine.DIO1_AD1,
+                "mode": IOMode.DIGITAL_IN,
+                "trigger": {
+                        "target": "DOORBELL_BUZZER",
+                        "limit": "LOW"
+                        },
+                },
+    }
 }

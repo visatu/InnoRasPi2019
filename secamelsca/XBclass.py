@@ -42,6 +42,7 @@ class masterXBee:
     def __init__(self, port, baud, callback_handler=None):
         #Semaphore for XBee action, limits acces to single user at a time
         self.sema = Semaphore()
+        self.sema2 = Semaphore()
         # instantiate local XBee device
         print("Opening local device", port, baud)
         self.localXB = XBeeDevice(port,baud)
@@ -56,8 +57,9 @@ class masterXBee:
         self.localXB.set_dest_address(self.localXB.get_64bit_addr())
         self.localXB.add_io_sample_received_callback(self.io_sample_callback)
         self.callback_function = callback_handler
-        # clear previous monitored IO lines:
-        self.localXB.set_dio_change_detection([])
+        #clear previous monitored IO lines:
+        for dev in self.devices:
+            self.devices[dev].xbee.set_dio_change_detection(None)
 
     def getNetworkDevices(self):
         """
@@ -84,7 +86,7 @@ class masterXBee:
         networkDevices.insert(0, self.localXB)
         print("Found the following devices:")
         for found in networkDevices:
-            print(found)
+            print(str(found))
         # loop through found network devices and create a XBeeDev object for each
         # containing device type and connected sensors
         for device in networkDevices:
@@ -135,20 +137,23 @@ class masterXBee:
             })
         return devicedata
 
-    def register_callbacks(self, sensors, callback):
+    def register_callback(self, deviceID, sensorNames):
         """
         register a callback function for a value change in given XBeeSensor objects (DIGITAL I/O!)
         input is a list of sensor objects
         """
-        # open local xbee serial
-        lines = []
-        # register line for change detection
-        for sensor in sensors:
-            lines.append(sensor.pinLine)
-        self.localXB.set_dio_change_detection(lines)
+        lines =  []
+        # get xbee device and sensor pin line from device library
+        xbee = self.devices[deviceID].xbee
+        xbee.set_dio_change_detection(None)
+        for name in sensorNames:
+            lines.append(self.devices[deviceID].sensors[name].pinLine)
+        # xbee-python library function to register change detection sampling :D
+        xbee.set_dio_change_detection(lines)
 
     @threaded
     def io_sample_callback(self, io_sample, remote_xbee, send_time):
+        self.sema2.acquire()
         sender_id = str(remote_xbee).split()[0]
         for sensor in self.devices[sender_id].sensors:
             pinLine = self.devices[sender_id].sensors[sensor].pinLine
@@ -157,6 +162,7 @@ class masterXBee:
                 print("IO Sample callback:", sensor, value)
                 self.sensordata[sender_id][sensor] = value
                 self.callback_function(sensor, value)
+        self.sema2.release()
 
     def general_io(self, sensor, value_in=None):
         """
@@ -171,6 +177,7 @@ class masterXBee:
                     if value_in:
                         if (0 < int(value_in) < 100):
                             sensor.xbee.set_pwm_duty_cycle(sensor.pinLine, value_in)
+                            self.sensordata[sensor.dvcID][sensor.pinType] = value_in
                             value_out = value_in
                         break
                 # ADC read
@@ -208,37 +215,65 @@ class masterXBee:
                 print("ERROR IN VALUE READ:", str(error))
                 pass
         # if NTC, convert to celcius
-        if sensor.pinType == "NTC":
+        if "NTC" in str(sensor.pinType):
             if value_out:
                 value_out = self.ntc_convert(value_out)
         self.sema.release()
         return value_out
 
     def ntc_convert(self, ADC_value):
-        """ Returns NTC read temperature in Celsius"""
-        R1 = 10000          # series resistor
-        R0 = 10000          # NTC starting value
-        T0 = 273 + 25       # Temp reference value in kelvins (273.15+25)
-        Vs = 3.3            # supply voltage
-        Vref = 3.3          # voltage reference
-        Bval = 3450         # NTC B value
-        # convert to analog voltage
-        Vt = ADC_value/1023 * Vref
-        # Vs---R1---(Sense)---tempR---GND
-        tempR = Vt / (Vs-Vt) * R1
-        # https://en.wikipedia.org/wiki/Thermistor#B_or_%CE%B2_parameter_equation
-        tempK = Bval / math.log(tempR / (R0 * math.exp(-1 * Bval / T0)))
-        # convert back to Celsius
-        tempC = tempK - 273
-        # print("NTC_convert\tADC: %04i\tR: %5.00f\tT: %.02f" %(ADC_value, tempR ,tempC))
-        return "{:.1f}".format(tempC)
+        try:
+            """ Returns NTC read temperature in Celsius"""
+            R1 = 10000          # series resistor
+            R0 = 10000          # NTC starting value
+            T0 = 273 + 25       # Temp reference value in kelvins (273.15+25)
+            Vs = 3.3            # supply voltage
+            Vref = 3.3          # voltage reference
+            Bval = 3450         # NTC B value
+            # convert to analog voltage
+            Vt = ADC_value/1023 * Vref
+            # Vs---R1---(Sense)---tempR---GND
+            tempR = Vt / (Vs-Vt) * R1
+            # https://en.wikipedia.org/wiki/Thermistor#B_or_%CE%B2_parameter_equation
+            tempK = Bval / math.log(tempR / (R0 * math.exp(-1 * Bval / T0)))
+            # convert back to Celsius
+            tempC = tempK - 273
+            # print("NTC_convert\tADC: %04i\tR: %5.00f\tT: %.02f" %(ADC_value, tempR ,tempC))
+            return "{:.1f}".format(tempC)
+        except ZeroDivisionError:
+            return(0)
 
     def sensor_update_value(self, sensor):
         "updtes the value of the sensor to sensordata dict"
         updated = self.general_io(sensor)
         if updated:
             value = str(updated).strip("IOValue.")
+            self.check_trigger(sensor,value)
+
             self.sensordata[sensor.dvcID][sensor.pinType] = value
+    
+    def check_trigger(self, sensor, value):
+        if not sensor.triggers:
+            return
+        if sensor.analogTrigger:
+            if float(value) > sensor.limit:
+                valueOut = "HIGH"
+            else:
+                valueOut = "LOW"
+        else:
+            if value == sensor.limit:
+                valueOut = "HIGH"
+            else:
+                valueOut = "LOW"
+            
+        
+        for dev in self.devices:
+            devObj = self.devices[dev]
+            for sens in devObj.sensors:
+                if sens == sensor.target:
+                    sensor = devObj.sensors[sens]
+                    if self.sensordata[sensor.dvcID][sensor.pinType] != valueOut:
+                        self.general_io(sensor,valueOut)
 
 
 class XBeeDev:
@@ -246,6 +281,7 @@ class XBeeDev:
     def __init__(self,XBee):
         # get the type of the device (node id for now)
         self.dvcType = XBee.get_node_id()
+        self.xbee = XBee
         # get unique identifier
         # binascii.hexlify(bytearray(array_alpha))
         self.dvcID = bytes(XBee.get_64bit_addr()).hex().upper()
@@ -266,5 +302,21 @@ class XBeeSensor:
         print("Setting pin " + str(self.pinType) + " of " + self.dvcType, end="")
         self.pinLine = deviceTypes[self.dvcType][self.pinType]["line"]
         self.pinMode = deviceTypes[self.dvcType][self.pinType]["mode"]
+        self.triggers = False
+        self.analogTrigger = True
+        self.target = ""
+        self.limit = 0
+        if "trigger" in deviceTypes[self.dvcType][self.pinType]:
+            trig = deviceTypes[self.dvcType][self.pinType]["trigger"]
+            self.triggers = True
+            self.target = trig["target"]
+            if trig["limit"] == "HIGH":
+                self.analogTrigger = False
+                self.limit = "HIGH"
+            elif trig["limit"] == "LOW":
+                self.analogTrigger = False
+                self.limit = "LOW"
+            else:
+                self.limit = trig["limit"]
         self.xbee.set_io_configuration(self.pinLine,self.pinMode)
         print(" ...OK!")
