@@ -8,8 +8,7 @@ from XBclass import masterXBee
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from threading import Thread
-import random
-
+import random, sys
 ######### FLASK PART ######################
 site = Flask(__name__)
 socketio = SocketIO(site)
@@ -59,8 +58,25 @@ def callbackfunction(sensor, value):
 
 
 if __name__ == "__main__":
+    # check how many arguments were given (first one is always this script!)
+    # first argument given should be port to use for xbee device!
+    print("startup args:", sys.argv)
+    argcount = len(sys.argv)
+    if argcount > 3:
+        print("Too many arguments!")
+        sys.exit()
+    elif argcount == 3:
+        # second argument to port
+        xb_port = sys.argv[1]
+        xb_baud = sys.argv[2]
+    else:
+        print("Check your startup arguments!")
+        print("Defaulting to COM6 921600...")
+        # Default to com6 ":D" at 921600
+        xb_port = "COM6"
+        xb_baud = 921600
     # open local "master" xbee :D
-    master = masterXBee(port="com6", baud="921600", callback_handler=callbackfunction)
+    master = masterXBee(port=xb_port, baud=xb_baud, callback_handler=callbackfunction)
     # register DOOR device's DOORBELL sensor as a callback
     master.register_callback("0013A200418734DC",["DOORBELL", "WEIGHT_PLATE"])
     master.polling_start()
