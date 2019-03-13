@@ -16,3 +16,27 @@ We have a couple of options on how to connect to the RasPi to get a hold of its 
 The default username is **pi** and the default password is **raspberry**. You probably want to change at least the password. This can be done with the command `passwd`.
 
 ![raspilogin](../img/raspipassword.png)
+
+Optionally you might want to update the system:
+```
+sudo apt update && sudo apt upgrade
+```
+
+.. and maybe restart the RPi after that : 
+```
+sudo shutdown -r now
+```
+Python 3 should be installed:
+```
+$ python3 --version
+Python 3.5.3
+```
+Python package installer **pip** is probably not though:
+```
+sudo apt install python3-pip
+```
+For XBee devices we'll need the `digi-xbee` library:
+```
+python3 -m pip install digi-xbee
+```
+This should be all that is needed to start working with xbee devices on the Raspberry Pi!
