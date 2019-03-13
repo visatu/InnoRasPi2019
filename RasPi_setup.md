@@ -39,4 +39,10 @@ For XBee devices we'll need the `digi-xbee` library:
 ```
 python3 -m pip install digi-xbee
 ```
-This should be all that is needed to start working with xbee devices on the Raspberry Pi!
+This should be all that is needed to start working with xbee devices on the Raspberry Pi
+
+## Extra stuff
+You'll probably want to install git as well:
+```
+sudo apt install git
+```

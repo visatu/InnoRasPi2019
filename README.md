@@ -14,8 +14,15 @@ The following Python 3 libraries were used:
 
 Other used stuff:
 - **Bootstrap4**: open source web development toolkit. Makes creating decent looking websites a bit easier
-## Relevant links & documentation
 
+We used [Visual Studio Code](https://code.visualstudio.com/) for writing and it has pretty good integration with git and some great extensions for our project:
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) - python language  support
+- [Jinja](https://marketplace.visualstudio.com/items?itemName=wholroyd.jinja) - flask templating language support
+- [Git History](https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory) - nice way to track changes in repository
+- [Bootstrap v4 Snippets](https://marketplace.visualstudio.com/items?itemName=Zaczero.bootstrap-v4-snippets) - super easy bootstrap templates!
+- [VS Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare) - real time shared file editing!
+
+## Relevant links & documentation
 ### XBee
 Wireless xbee modules were used as the main component for the whole project.
 - XBee3 user guide: https://www.digi.com/resources/documentation/digidocs/PDFs/90002273.pdf
@@ -35,14 +42,3 @@ Wireless xbee modules were used as the main component for the whole project.
 
 ### Sensors
 - Sensor kit used (originally bought from BangGood.com): https://www.instructables.com/id/Arduino-37-in-1-Sensors-Kit-Explained/
-
-
-## ETC
-
-### Sensorit mitä valmiina
-- lämpötila
-- valoisuus
-- äänenvoimakkuus/voimakkaiden äänien tunnistus (clapper?)
-- kallistuksen tunnistus
-- general DIO
-- painosensori "pressure plate" tyylil
