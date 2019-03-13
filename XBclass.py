@@ -83,12 +83,11 @@ class masterXBee:
             time.sleep(.5)
         networkDevices = network.get_devices()
         networkDevices.insert(0, self.localXB)
-        print("Found the following devices:")
-        for found in networkDevices:
-            print(str(found))
         # loop through found network devices and create a XBeeDev object for each
         # containing device type and connected sensors
+        print("Found devices and sensors:")
         for device in networkDevices:
+            print(device)
             # new xbee device with its pins n stuff
             XBeeDevobj = XBeeDev(device)
             # add it to master class's device dict
@@ -98,6 +97,7 @@ class masterXBee:
     @threaded
     def polling_start(self, interval=1):
         "start updating all connected sensors with given interval"
+        print("Starting sensor polling with interval %.3f seconds" %(interval))
         self.polling = True
         while self.polling == True:
             for dvc in self.devices:
@@ -107,6 +107,7 @@ class masterXBee:
 
    
     def polling_stop(self):
+        print("Stopped sensor polling!")
         "stop sensor value updating"
         self.polling = False
 
@@ -297,7 +298,7 @@ class XBeeSensor:
         self.dvcType = xbee.get_node_id()
         self.dvcID = bytes(xbee.get_64bit_addr()).hex().upper()
         self.pinType = pinType
-        print("Setting pin " + str(self.pinType) + " of " + self.dvcType, end="")
+        print("\t" + str(self.pinType) + " of " + self.dvcType, end="")
         self.pinLine = deviceTypes[self.dvcType][self.pinType]["line"]
         self.pinMode = deviceTypes[self.dvcType][self.pinType]["mode"]
         self.triggers = False
