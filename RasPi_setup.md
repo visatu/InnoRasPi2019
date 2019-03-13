@@ -15,8 +15,6 @@ We have a couple of options on how to connect to the RasPi to get a hold of its 
 
 The default username is **pi** and the default password is **raspberry**. You probably want to change at least the password. This can be done with the command `passwd`.
 
-![raspilogin](../img/raspipassword.png)
-
 Optionally you might want to update the system:
 ```
 sudo apt update && sudo apt upgrade
@@ -42,7 +40,20 @@ python3 -m pip install digi-xbee
 This should be all that is needed to start working with xbee devices on the Raspberry Pi
 
 ## Extra stuff
+### git
 You'll probably want to install git as well:
 ```
 sudo apt install git
+```
+### finding master xbee in linux
+Under linux you can find your connected XBee (and other USB) devices in `/dev`. This path can be given to the digi-xbee library insteand of a COM port:
+```
+$ ls /dev/ttyUSB*
+/dev/ttyUSB0
+```
+and in python:
+```python
+port = "/dev/ttyUSB0"
+baud = 921600
+myLocalXBee = digi.xbee.devices.XBeeDevice(port,baud)
 ```
