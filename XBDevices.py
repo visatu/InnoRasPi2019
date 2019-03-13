@@ -1,3 +1,9 @@
+"""
+This class works as a reference for XBClass.py for what sensors each device has.
+The program will setup each sensor according to this dictionary,
+and polling is done using this setup as well.
+"""
+
 from digi.xbee.io import IOLine, IOMode
 
 deviceTypes = {
