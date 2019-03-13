@@ -8,7 +8,7 @@ from XBclass import masterXBee
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from threading import Thread
-import random, sys
+import random, sys, socket
 ######### FLASK PART ######################
 site = Flask(__name__)
 socketio = SocketIO(site)
@@ -56,6 +56,13 @@ def callbackfunction(sensor, value):
         elif value == "HIGH":
             master.general_io(master.devices["0013A20041873060"].sensors["LED"], "HIGH")
 
+def get_local_ip():
+    # https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect(("1.1.1.1", 80))
+    local_ip = sock.getsockname()[0]
+    sock.close()
+    return local_ip
 
 if __name__ == "__main__":
     # check how many arguments were given (first one is always this script!)
@@ -79,6 +86,9 @@ if __name__ == "__main__":
     master = masterXBee(port=xb_port, baud=xb_baud, callback_handler=callbackfunction)
     # register DOOR device's DOORBELL sensor as a callback
     master.register_callback("0013A200418734DC",["DOORBELL", "WEIGHT_PLATE"])
-    master.polling_start()
+
+    master.polling_start(interval=1)
     #run flask site
+    print("Local IP:", get_local_ip())
+    print("Starting Flask...")
     socketio.run(site, debug=True, use_reloader=False, host="0.0.0.0")
