@@ -7,8 +7,12 @@
 
 We have a couple of options on how to connect to the RasPi to get a hold of its command line:
 - Connect a display and a keyboard
-- Connect the device to a network and SSH in
+- Connect the device to a network and SSH in using PuTTY, for example. Look up the IP the device gets either from a connected display (IP shown during bootup) or from a router the RPi is connected to. The default port used for SSH is 22.
+- Connect to PC using ethernet cable between computers
 - Use the GPIO pins to use serial communication through USB, with PuTTY, for example.
+## Connecting using SSH
 
-The default username is **pi** and the default password is **raspberry**
+![routerip](../img/routerIP.png)
+![sshputty](../img/puttySSH.png)
 
+The default username is **pi** and the default password is **raspberry**.
