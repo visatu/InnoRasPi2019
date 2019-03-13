@@ -153,6 +153,8 @@ class masterXBee:
 
     @threaded
     def io_sample_callback(self, io_sample, remote_xbee, send_time):
+        self.sema.release()
+        self.sema.acquire()
         sender_id = str(remote_xbee).split()[0]
         for sensor in self.devices[sender_id].sensors:
             pinLine = self.devices[sender_id].sensors[sensor].pinLine
@@ -161,6 +163,7 @@ class masterXBee:
                 print("IO Sample callback:", sensor, value)
                 self.sensordata[sender_id][sensor] = value
                 self.callback_function(sensor, value)
+        self.sema.release()
 
 
     def general_io(self, sensor, value_in=None):
@@ -169,7 +172,7 @@ class masterXBee:
         """
         self.sema.acquire()
         value_out=None
-        for attempt in range(10):
+        for attempt in range(1):
             try:
                 # PWM output
                 if sensor.pinMode == IOMode.PWM:
@@ -202,14 +205,6 @@ class masterXBee:
                     else:
                         value_out = value_in
                         break
-            # errors that xbee gives when doing lots of stuff through serial.. . :D
-            # might want to implement queue.
-            # Added semaphores to compat this
-            # except digi.xbee.exception.TimeoutException:
-            #     pass
-            # except ValueError:
-            #     pass
-            # or just skip everything. for now.
             except Exception as error:
                 print("ERROR IN VALUE READ:", str(error))
                 pass
