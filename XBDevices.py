@@ -12,7 +12,7 @@ deviceTypes = {
                 "mode": IOMode.ADC},
         "DOORBELL_BUZZER": {"line": IOLine.DIO12,
                 "mode": IOMode.DIGITAL_OUT_LOW},
-        "WGT_LED": {"line": IOLine.DIO4_AD4,
+        "LED_WGT": {"line": IOLine.DIO4_AD4,
                 "mode": IOMode.DIGITAL_OUT_LOW},
     },
     "ROOM": {
@@ -37,7 +37,7 @@ deviceTypes = {
                 "line": IOLine.DIO1_AD1,
                 "mode": IOMode.DIGITAL_IN,
                 "trigger": {
-                        "target": "WGT_LED",
+                        "target": "LED_WGT",
                         "limit": "LOW"
                         },
                 },
