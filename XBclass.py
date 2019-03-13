@@ -42,7 +42,6 @@ class masterXBee:
     def __init__(self, port, baud, callback_handler=None):
         #Semaphore for XBee action, limits acces to single user at a time
         self.sema = Semaphore()
-        self.sema2 = Semaphore()
         # instantiate local XBee device
         print("Opening local device", port, baud)
         self.localXB = XBeeDevice(port,baud)
@@ -153,7 +152,6 @@ class masterXBee:
 
     @threaded
     def io_sample_callback(self, io_sample, remote_xbee, send_time):
-        self.sema2.acquire()
         sender_id = str(remote_xbee).split()[0]
         for sensor in self.devices[sender_id].sensors:
             pinLine = self.devices[sender_id].sensors[sensor].pinLine
@@ -162,7 +160,7 @@ class masterXBee:
                 print("IO Sample callback:", sensor, value)
                 self.sensordata[sender_id][sensor] = value
                 self.callback_function(sensor, value)
-        self.sema2.release()
+
 
     def general_io(self, sensor, value_in=None):
         """
