@@ -2,29 +2,29 @@
 {% extends "layout.html" %}
 <!-- inside block named "content" goes the content we want to display on page-->
 {% block content %}
-    <h1>Connected devices</h1>
+    <h1 style="color:rgb(0, 255, 0);">Connected devices</h1>
     <!-- card deck for devices with own card for each device -->
     <div class="card-deck">
         <!-- create a card for each device in dictionary -->
         {% for device in devices %}
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">DEVICE: {{device.upper()}}</h5>
-                <p class="card-text">
-                    <p>Type: <b>{{devices[device]["type"]}}</b></p>
+        <div style="border:2px solid rgb(0, 255, 0);" class="card">
+            <div style="background-color: rgb(0, 0, 0)"; class="card-body">
+                <h5 style="color:rgb(0, 255, 0);" class="card-title">DEVICE: {{device.upper()}}</h5>
+                <p style="color:rgb(0, 255, 0);" class="card-text">
+                    <p style="color:rgb(0, 255, 0);">Type: <b style="color:rgb(0, 255, 0);">{{devices[device]["type"]}}</b></p>
                     <!-- list all sensors -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Sensor</th>
-                                <th>Value</th>
+                                <th style="color:rgb(0, 255, 0);">Sensor</th>
+                                <th style="color:rgb(0, 255, 0);">Value</th>
                             </tr>
                         </thead>
                         <tbody>
                                 {% for sensor in devices[device]["sensors"] %}
                                 <tr>
-                                    <td>{{sensor}}</td>
-                                    <td id={{device + sensor}}>None</td>
+                                    <td style="color:rgb(0, 255, 0);">{{sensor}}</td>
+                                    <td style="color:rgb(0, 255, 0);" id={{device + sensor}}>None</td>
                                 </tr>
                                 {% endfor %}
                         </tbody>
