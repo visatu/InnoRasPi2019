@@ -45,7 +45,9 @@ def send_sensor_values():
 
 
 def callbackfunction(sensor, value):
+    "This function receives a value accompanied by the name of the sensor that sent it. Process as you wish."
     if sensor == "DOORBELL":
+        # if button named "doorbell" pressed, activate buzzer on another device.
         if value == "LOW":
             master.general_io(master.devices["0013A200418724A6"].sensors["DOORBELL_BUZZER"], "HIGH")
         elif value == "HIGH":
@@ -57,8 +59,10 @@ def callbackfunction(sensor, value):
     #         master.general_io(master.devices["0013A20041873060"].sensors["WGT_LED"], "HIGH")
 
 def get_local_ip():
+    "Returns the LAN IP address the RPi has gotten at boot. This can be used to connect to the web interface"
     # https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # cloudflare dns server
     sock.connect(("1.1.1.1", 80))
     local_ip = sock.getsockname()[0]
     sock.close()
@@ -67,6 +71,7 @@ def get_local_ip():
 if __name__ == "__main__":
     # check how many arguments were given (first one is always this script!)
     # first argument given should be port to use for xbee device!
+    # second argument should be the baud rate.
     print("startup args:", sys.argv)
     argcount = len(sys.argv)
     if argcount > 3:
@@ -84,11 +89,11 @@ if __name__ == "__main__":
         xb_baud = 921600
     # open local "master" xbee :D
     master = masterXBee(port=xb_port, baud=xb_baud, callback_handler=callbackfunction)
-    # register DOOR device's DOORBELL sensor as a callback
+    # register DOOR device's DOORBELL sensor as a callback to enable fast response to button presses
     master.register_callback("0013A200418734DC",["DOORBELL"])
-
+    # start polling sensor values two times a second.
     master.polling_start(interval=0.5)
-    #run flask site
     print("Local IP:", get_local_ip())
     print("Starting Flask...")
+    #run flask site with socketIO enabled
     socketio.run(site, debug=True, use_reloader=False, host="0.0.0.0")
