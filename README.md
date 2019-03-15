@@ -121,7 +121,7 @@ master.register_callback("SECONDE64BITADDRESS", None)
 
 -------------
 
-## Relevant links & documentation
+## Some links
 ### XBee
 Wireless xbee modules were used as the main component for the whole project.
 - XBee3 user guide: https://www.digi.com/resources/documentation/digidocs/PDFs/90002273.pdf
@@ -136,8 +136,5 @@ Wireless xbee modules were used as the main component for the whole project.
 - Flask-SocketIO documentation: https://flask-socketio.readthedocs.io/en/latest/
 
 ### Bootstrap
-- Vakio bootstrap doku: https://getbootstrap.com/docs/4.3/getting-started/introduction/
-- W3 tutoriaalei ja esimerkkei: https://www.w3schools.com/bootstrap4/default.asp
-
-### Sensors
-- Sensor kit used (originally bought from BangGood.com): https://www.instructables.com/id/Arduino-37-in-1-Sensors-Kit-Explained/
+- Official bootstrap documentation: https://getbootstrap.com/docs/4.3/getting-started/introduction/
+- W3schools tutorials and examples: https://www.w3schools.com/bootstrap4/default.asp
